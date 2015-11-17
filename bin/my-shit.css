@@ -1,0 +1,29 @@
+.main-sidebar {
+	padding-top: 0px;
+}
+
+.sidebar-menu .treeview-menu {
+	padding-left: 0px;
+}
+
+ul.fancytree-container {
+    background-color: #fff;
+    border: none;
+    overflow: auto;
+    min-height: 0;
+    position: relative;
+    box-shadow: none!important;
+}
+
+#preview {
+	background-image: url(preview-bg.png);
+	width: 100%;
+	padding: 15px;
+	min-height: 120px;
+}
+#preview-img-wrapper {
+	position: relative;
+}
+#preview-img {
+	max-width: 100%;
+}
