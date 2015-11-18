@@ -1,4 +1,14 @@
 $(document).ready(function(){
+
+
+	var $previewImg = $('#preview-img'),
+		$onCanvasPreview = $('#on-canvas-preview'),
+		$window = $(window),
+		rootStage,
+		renderer,
+		$canvasContainer = $('#canvas'),
+		spriteSelected = false;
+
 	$("#sprite-list").fancytree({
 		source: {
 			url: "sprites.json"
@@ -78,10 +88,123 @@ $(document).ready(function(){
 		},
 		activate: function(event, data) {
 			var node = data.node;
-			console.log(node);
+			if(!node.folder) {
+				$previewImg.attr('src',node.data.path);
 
-			$('#preview-img').attr('src',node.data.path);
+				$onCanvasPreview.attr('src',node.data.path);
+
+				setTimeout(function(){
+					$onCanvasPreview.css({
+						top: (($canvasContainer.outerHeight() - $onCanvasPreview.outerHeight())/2) + 'px',
+						left: '45px'
+					});
+					$onCanvasPreview.css({
+						opacity: 1
+					});
+					spriteSelected = true;
+				},0);
+
+			} else {
+				$previewImg.attr('src','');
+				$onCanvasPreview.attr('src','');
+				spriteSelected = false;
+			}
+
+			
+		},
+		keydown: function(event, data) {
+			console.log(event.which);
+
+			if(event.which==71) {
+				addCurrentSpriteToCanvas();
+			}
 		},
 		checkbox: true
 	});
+
+	var uid = 0;
+
+
+	function setupCanvasPreviewMouse() {
+		$canvasContainer.on('mousemove',function(e){
+			var x = e.pageX - $canvasContainer.offset().left,
+				y = e.pageY - $canvasContainer.offset().top;
+
+			$onCanvasPreview.css({
+				top: y-($onCanvasPreview.outerHeight()/2),
+				left: x-($onCanvasPreview.outerWidth()/2)
+			});
+		});
+
+		$canvasContainer.on('click', function(e){
+			if(spriteSelected) {
+				addCurrentSpriteToCanvas();
+			}
+		});
+	}
+
+
+	//@TEMPORARY
+	function getUID() {
+		return uid++;
+	}
+	
+	//@TEMPORARY
+	function addCurrentSpriteToCanvas() {
+		var spriteLeft = $onCanvasPreview.position().left,
+			spriteTop = $onCanvasPreview.position().top;
+
+		var thisSpriteID = getUID()+$onCanvasPreview.attr('src');
+
+		console.log(thisSpriteID);
+
+		PIXI.loader.add(thisSpriteID,$onCanvasPreview.attr('src')).load(function(loader,resources){
+
+			var sprite = new PIXI.Sprite(resources[thisSpriteID].texture);
+
+			sprite.position.x = spriteLeft;
+			sprite.position.y = spriteTop;
+
+			rootStage.addChild(sprite);
+
+		});
+
+		
+	}
+	
+
+	function renderCanvas() {
+
+		console.log($canvasContainer.outerWidth());
+		console.log(parseInt($canvasContainer.outerHeight()));
+
+
+		renderer = new PIXI.WebGLRenderer(parseInt($canvasContainer.outerWidth()), parseInt($canvasContainer.outerHeight()));
+
+		console.log(renderer);
+
+
+		$canvasContainer.append(renderer.view);
+
+		rootStage = new PIXI.Container();
+
+		animate();
+	}
+
+	function animate() {
+		requestAnimationFrame(animate);
+
+	    // this is the main render call that makes pixi draw your container and its children.
+	    renderer.render(rootStage);
+	}
+
+
+	$window.resize(function(){
+		renderer.view.style.width = $canvasContainer.outerWidth()+'px';
+		renderer.view.style.height = $canvasContainer.outerHeight()+'px';
+
+	});
+
+	renderCanvas();
+	setupCanvasPreviewMouse();
 });

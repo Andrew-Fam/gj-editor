@@ -13,6 +13,7 @@ ul.fancytree-container {
     min-height: 0;
     position: relative;
     box-shadow: none!important;
+    outline: none!important;
 }
 
 #preview {
@@ -26,4 +27,29 @@ ul.fancytree-container {
 }
 #preview-img {
 	max-width: 100%;
+}
+
+#sprite-list {
+	background-color: #fff;
+	height: 300px;
+}
+
+#main-window {
+	position: relative;
+}
+
+#canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	overflow: hidden;
+}
+
+#on-canvas-preview {
+	position: absolute;
+	background-color: rgba(255,255,255,0.1);
+	transition: opacity 0.125s ease;
+	opacity: 0;
 }
