@@ -40,10 +40,12 @@ ul.fancytree-container {
 
 #canvas {
 	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
+	width: 1366px;
+	height: 768px;
+	top: 50%;
+	margin-left: -683px;
+	left: 50%;
+	margin-top: -384px;
 	overflow: hidden;
 }
 

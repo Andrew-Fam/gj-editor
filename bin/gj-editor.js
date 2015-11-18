@@ -158,16 +158,16 @@ $(document).ready(function(){
 
 		console.log(thisSpriteID);
 
-		PIXI.loader.add(thisSpriteID,$onCanvasPreview.attr('src')).load(function(loader,resources){
+		
 
-			var sprite = new PIXI.Sprite(resources[thisSpriteID].texture);
+		var sprite = new PIXI.Sprite(PIXI.Texture.fromImage($onCanvasPreview.attr('src'), true, PIXI.SCALE_MODES.NEAREST));
 
-			sprite.position.x = spriteLeft;
-			sprite.position.y = spriteTop;
+		sprite.position.x = spriteLeft;
+		sprite.position.y = spriteTop;
 
-			rootStage.addChild(sprite);
+		rootStage.addChild(sprite);
 
-		});
+
 
 		
 	}
@@ -200,8 +200,6 @@ $(document).ready(function(){
 
 
 	$window.resize(function(){
-		renderer.view.style.width = $canvasContainer.outerWidth()+'px';
-		renderer.view.style.height = $canvasContainer.outerHeight()+'px';
 
 	});
 
