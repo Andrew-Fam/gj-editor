@@ -158,17 +158,12 @@ $(document).ready(function(){
 
 		console.log(thisSpriteID);
 
-		
-
 		var sprite = new PIXI.Sprite(PIXI.Texture.fromImage($onCanvasPreview.attr('src'), true, PIXI.SCALE_MODES.NEAREST));
 
 		sprite.position.x = spriteLeft;
 		sprite.position.y = spriteTop;
 
 		rootStage.addChild(sprite);
-
-
-
 		
 	}
 	
