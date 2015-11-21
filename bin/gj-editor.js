@@ -9,6 +9,14 @@ $(document).ready(function(){
 		$canvasContainer = $('#canvas'),
 		spriteSelected = false;
 
+
+	// this variable is flag for moving canvas with mouse
+	var movingCanvas = false;
+
+
+	// this variable flag shift key held down
+	var shift = false;
+
 	$("#sprite-list").fancytree({
 		source: {
 			url: "sprites.json"
@@ -143,6 +151,97 @@ $(document).ready(function(){
 		});
 	}
 
+	function setupCanvasMoveMouse() {
+
+		console.log("setup Canvas Move Mouse");
+
+		$window.keydown(function(e){
+
+			console.log(e.which);
+
+			if(e.which==32) {
+				movingCanvas = true;
+			}
+
+			if(e.which==16) {
+				shift = true;
+			}
+
+			if(e.which==38) {
+				moveCanvasY(shift?-10:-1);
+			}
+
+			if(e.which==40) {
+				moveCanvasY(shift?10:1);
+			}
+
+			if(e.which==39) {
+				moveCanvasX(shift?10:1);
+			}
+
+			if(e.which==37) {
+				moveCanvasX(shift?-10:-1);
+			}
+		});
+
+		$window.keyup(function(e){
+			if(e.which==32) {
+				movingCanvas = false;
+			}
+
+			if(e.which==16) {
+				shift = false;
+			}
+		});
+
+		$canvasContainer.on('mousemove',function(e){
+			var x = e.pageX - $canvasContainer.offset().left,
+				y = e.pageY - $canvasContainer.offset().top;
+
+			if(movingCanvas) {
+				moveCanvasX(mouseMovementX);
+				moveCanvasY(mouseMovementY);
+			}
+		})
+	}
+
+	function setupBasicMouseTracking() {
+
+		window.previousMousePositionX = 0;
+		window.previousMousePositionY = 0;
+		window.mouseMovementX = 0;
+		window.mouseMovementY = 0;
+
+		$window.on('mousemove',function(e){
+			mouseMovementX = e.pageX-previousMousePositionX;
+			mouseMovementY = e.pageY-previousMousePositionY;
+
+			previousMousePositionX = e.pageX;
+			previousMousePositionY = e.pageY;
+		});
+	}
+
+	function moveCanvasX(m) {
+
+		if(movingCanvas) {
+			var newX = rootStage.x + m;
+
+			rootStage.x = newX;
+		}
+
+		
+		
+	}
+
+	function moveCanvasY(m) {
+		if(movingCanvas) {
+			var newY = rootStage.y + m;
+			
+			rootStage.y = newY;
+		}
+	}
+
+
 
 	//@TEMPORARY
 	function getUID() {
@@ -151,8 +250,8 @@ $(document).ready(function(){
 	
 	//@TEMPORARY
 	function addCurrentSpriteToCanvas() {
-		var spriteLeft = $onCanvasPreview.position().left,
-			spriteTop = $onCanvasPreview.position().top;
+		var spriteLeft = $onCanvasPreview.position().left-rootStage.x,
+			spriteTop = $onCanvasPreview.position().top-rootStage.y;
 
 		var thisSpriteID = getUID()+$onCanvasPreview.attr('src');
 
@@ -199,5 +298,7 @@ $(document).ready(function(){
 	});
 
 	renderCanvas();
+	setupBasicMouseTracking();
 	setupCanvasPreviewMouse();
+	setupCanvasMoveMouse();
 });
